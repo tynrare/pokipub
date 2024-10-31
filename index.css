@@ -1,0 +1,173 @@
+
+.a_a {
+  color: #fff;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: clip;
+  width: 100%;
+  height: 100%;
+}
+body {
+  width: 100vw;
+  height: 100vh;
+  --color-a: #fff0;
+  --color-b: #000;
+  background-color: var(--color-a);
+  color: var(--color-b);
+}
+
+.bbox {
+  margin: auto;
+  width: 512px;
+  height: 512px;
+  max-width: 100%;
+}
+
+@keyframes dysco {
+  from {
+    filter: hue-rotate(0deg);
+  }
+
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
+
+
+.dysco {
+  opacity: 0.5;
+  animation: dysco infinite 512s;
+  mix-blend-mode: overlay;
+}
+
+.flats {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+
+.bbox:target {
+  width: 100%;
+  height: 100%;
+}
+
+bb.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+bb.page {
+  display: none;
+}
+
+bb.page.active {
+  display: flex;
+}
+
+body.fancy {
+  display: flex;
+  font-family: "Rubik";
+  font-size: min(5vh, 5vw);
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+@font-face {
+  font-family: "Flow";
+  src: url("./res/FlowRounded.ttf");
+}
+@font-face {
+  font-family: "Rubik";
+  src: url("./res/Rubik-ExtraBold.ttf");
+}
+.fancy .wrap {
+  flex-wrap: wrap;
+}
+bb {
+  display: flex;
+  max-height: 100%;
+  max-width: 100%;
+}
+bb.center, bb.centercontent > bb {
+  margin: auto;
+}
+.fancy bb.fill {
+  width: 100%;
+  height: 100%;
+}
+
+.fancy bb.list {
+  flex-direction: column;
+}
+
+.fancy db {
+  display: none;
+}
+.fancy p {
+  padding: 0;
+  margin: 0;
+}
+.fancy text h1,
+.fancy text h2,
+.fancy text h3,
+.fancy text .bold {
+  text-shadow: 1px 1px #fff, 2px 2px var(--color-b);
+}
+.mute {
+  font-family: 'Flow';
+}
+.fancy bb#main text p:nth-last-child(2) {
+  display: inline;
+}
+
+.fancy .smaller {
+  font-size: 0.7em;
+}
+
+
+bb.overlay {
+  position: absolute;
+}
+
+.fancy iframe {
+  border: none;
+  border-radius: 16px;
+}
+
+.fancy #chatinput {
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid #000a;
+  font-family: "Rubik";
+  font-size: 0.5em;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Old versions of Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}

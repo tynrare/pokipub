@@ -1,0 +1,26 @@
+{
+  "name": "pokipub",
+  "version": "1.0.0",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "vite --host",
+    "frontend": "",
+    "backend": "node ./backend.js",
+    "build": "vite build",
+    "doc": "jsdoc src -d dist/docs -R README.md",
+    "build-n-doc": "npm run build && (npm run doc || true)"
+  },
+  "author": "tynroar",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@poki/netlib": "^0.0.14"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "jsdoc": "^4.0.4",
+    "vite": "^5.4.10",
+    "vite-plugin-babel": "^1.2.0"
+  }
+}
