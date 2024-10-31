@@ -28,8 +28,8 @@ class App {
 
   async load() {
     this.page("loading");
-    await this.pokiwrap.load();
-    this.pokiwrap.confirm_loading();
+    //await this.pokiwrap.load();
+    //this.pokiwrap.confirm_loading();
     this.page("greet");
 
     return this;

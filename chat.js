@@ -1,4 +1,4 @@
-import Network from "./network.js";
+import Network, { NetPacket } from "./network.js";
 import { LobbyListEntry } from "@poki/netlib";
 import { byte2str, str2byte } from "./crypt.js";
 
@@ -28,9 +28,9 @@ class Chat {
   }
 
   run() {
-    this._network.events.on("recieve", this.recieve, this);
-    this._network.events.on("greet", this.greet, this);
-    this._network.events.on("bye", this.update_stats, this);
+    this._network.events.on("recieve", this.recieve.bind(this));
+    this._network.events.on("greet", this.greet.bind(this));
+    this._network.events.on("bye", this.update_stats.bind(this));
   }
 
   send(message) {
@@ -42,17 +42,17 @@ class Chat {
   /**
    * @param {object} args
    * @param {string} args.id peer id
-   * @param {number} args.type packet type
-   * @param {Uint8Array} args.data packet data
+   * @param {NetPacket} args.packet packet data
    */
-  recieve({ id, type, data, flip, guid }) {
-    switch (type) {
+  recieve({ id, packet }) {
+    switch (packet.type) {
         case MESSAGE_TYPES.CHAT_MESSAGE:
-            if (flip) {
-              console.log("flip:", guid );
+            if (packet.flip) {
+              console.log("flip:", packet.guid );
             } else {
-              const text = byte2str(data);
-              console.log("got message:", id, guid, text );
+              console.log(packet.len);
+              const text = byte2str(packet._vdata16, packet.len / 2);
+              console.log("got message:", id, packet.guid, text );
               this.print("'" + text);
             }
             break;

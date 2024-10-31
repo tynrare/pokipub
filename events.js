@@ -26,14 +26,10 @@ class Events {
      * @param {any?} bind 
      * @returns {number} event id
      */
-    on(name, callback, bind) {
+    on(name, callback) {
         const guid = this.guids++;
         let _callback = null;
-        if (bind) {
-            _callback = ((detail) => callback(detail).bind(bind));
-        } else {
-            _callback = ((detail) => callback(detail));
-        }
+        _callback = ((detail) => callback(detail));
         const event =  { callback: _callback, name, guid };
 
         let list = this.list[name];

@@ -1,14 +1,23 @@
 
 .a_a {
-  color: #ffff63;
+  color: #102121;
 }
 
 .a_b {
-  color: #102121;
+  color: #ffff63;
 }
 
 .a_b.centrify > * {
   margin: auto;
+}
+
+.a_a.endify {
+  justify-content: end;
+  padding-bottom: 2em;
+}
+
+.a_a.endify > bb:last-child {
+  margin-bottom: 2em;
 }
 
 html,
@@ -170,13 +179,25 @@ bb.overlay {
 }
 
 .fancy bb.chatinput {
-  border-top: 1px solid #000a;
+  border-top: 4px solid #000a;
   width: calc(100% - 32px);
 }
 .fancy bb.chatinput::after {
   content: "▮";
   margin-right: auto;
   margin-left: 0;
+}
+
+.fancy bb.sticktop {
+  margin-top: 0;
+}
+
+.fancy .grabbott {
+  margin-bottom: 0;
+}
+
+.fancy .jumpup {
+  margin-bottom: auto;
 }
 
 .noselect {

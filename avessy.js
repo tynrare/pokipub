@@ -1,5 +1,7 @@
 import Events from "./events.js"
 
+const PALETTE_USE = false;
+
 var palette = null;
 var textarea = null;
 
@@ -135,6 +137,9 @@ function _loadPalette() {
 }
 
 function randomizePallete() {
+  if (!PALETTE_USE) {
+    return;
+  }
   if (!palette) {
     _loadPalette();
   }

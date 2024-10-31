@@ -41,7 +41,7 @@ const letters = [
  * @returns {Uint8Array}
  */
 export function str2byte(text) {
-  const str = new Uint8Array(text.length);
+  const str = new Uint16Array(text.length);
   for (const i in text) {
     const code = text.charCodeAt(i);
     str[i] = code;
@@ -51,10 +51,10 @@ export function str2byte(text) {
 }
 
 /**
- * @param {Uint8Array} data 
+ * @param {Uint16Array} data 
  * @returns {string}
  */
-export function byte2str(data) {
-  var a = Array.from(data);
+export function byte2str(data, len) {
+  var a = Array.from(data).slice(0, len);
   return String.fromCharCode(...a);
 }
