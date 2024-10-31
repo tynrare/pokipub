@@ -56,7 +56,7 @@ class Events {
             return;
         }
 
-        delete list[event.name][id];
+        delete this.list[event.name][id];
         delete this.clist[id]
     }
 
