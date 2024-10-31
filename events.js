@@ -75,7 +75,6 @@ class Events {
             const event = list[id];
             event.callback(detail);
         }
-        this.core.dispatchEvent(new CustomEvent(name, { detail }));
     }
 
     dispose() {

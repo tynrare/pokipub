@@ -37,23 +37,24 @@ const letters = [
 ];
 
 /**
- * 
- * @param {string} str 
- * @returns 
+ * @param {string} text 
+ * @returns {Uint8Array}
  */
-export function str2byte(str) {
-  var enc = new TextEncoder();
-  return enc.encode(enc);
-	const data = new Uint16Array(str.length);
-	for(let i = 0; i < str.length; i++) {
-		const l = str.charCodeAt(i);
-		data[i] = l;
-	}
+export function str2byte(text) {
+  const str = new Uint8Array(text.length);
+  for (const i in text) {
+    const code = text.charCodeAt(i);
+    str[i] = code;
+  }
 
-	return data;
+	return str;
 }
 
+/**
+ * @param {Uint8Array} data 
+ * @returns {string}
+ */
 export function byte2str(data) {
-	var enc = new TextDecoder("utf-8");
-  return enc.decode(data);
+  var a = Array.from(data);
+  return String.fromCharCode(...a);
 }

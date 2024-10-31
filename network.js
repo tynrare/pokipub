@@ -2,25 +2,24 @@ import Events from "./events.js";
 import pkg from '@poki/netlib';
 const { Network: Netlib } = pkg;
 
+const npts = 4;
+const npds = 256;
+const fill = new Uint8Array(Array(npds).fill(42));
+
 class NetPacket {
   constructor() {
-    this.buffer = new ArrayBuffer(4, { maxByteLength: 256 });
-    this._vtype = new Uint8Array(this.buffer, 0, 2);
-    this._vdata = new Uint8Array(this.buffer, 2, 2);
-    this._len = new Uint8Array(this.buffer, 0, 4);
+    this.buffer = new ArrayBuffer(npts + npds);
+    this._vtype = new Uint8Array(this.buffer, 0, npts);
+    this._vdata = new Uint8Array(this.buffer, npts, npds);
+    this._len = new Uint8Array(this.buffer, 0, npts + npds);
   }
 
   set_content(data) {
-    this.buffer.resize(data.byteLength + 2);
-    this._vdata = new Uint8Array(this.buffer, 2, data.byteLength);
     this._vdata.set(new Uint8Array(data));
-    this._len = new Uint8Array(this.buffer, 0, data.byteLength + 2);
+    this._vdata.set(fill.slice(0, npds - data.byteLength), data.byteLength);
   }
 
   copy(data) {
-    this.buffer.resize(data.byteLength);
-    this._vdata = new Uint8Array(this.buffer, 2, data.byteLength - 2);
-    this._len = new Uint8Array(this.buffer, 0, data.byteLength);
     this._len.set(new Uint8Array(data));
   }
 
@@ -30,6 +29,22 @@ class NetPacket {
 
   set type(val) {
     return (this._vtype[0] = val);
+  }
+
+  get guid() {
+    return this._vtype[1];
+  }
+
+  set guid(val) {
+    return (this._vtype[1] = val);
+  }
+  
+  get flip() {
+    return this._vtype[2];
+  }
+
+  set flip(val) {
+    return (this._vtype[2] = val);
   }
 }
 
@@ -48,6 +63,8 @@ class Network {
 
     this.max_peers = 4;
     this.count_peers = 0;
+
+    this.guids = 0;
   }
 
   /**
@@ -55,14 +72,22 @@ class Network {
    * @param {string|ArrayBuffer} data
    * @param {string?} [to]
    */
-  send(type, data, to) {
-    this.packet.type = type;
+  send(type, data, to, flip = false, guid = null) {
     if (ArrayBuffer.isView(data) || data instanceof ArrayBuffer) {
       this.packet.set_content(data);
     } else {
       this.packet.set_content(new Uint8Array(2));
       this.packet._vdata[0] = data;
     }
+
+    this.packet.type = type;
+    this.packet.flip = flip ? 1 : 0;
+    let _guid = guid;
+    if(!_guid) {
+      _guid = this.guids;
+      this.guids = (this.guids + 1) % 255;
+    }
+    this.packet.guid = _guid;
 
     const buffer = this.packet.buffer.slice();
 
@@ -81,19 +106,30 @@ class Network {
    */
   _on_message(peer, channel, data) {
     this.packet.copy(data);
-      /**
-       * @event Network#recieve
-       * @type {object}
-       * @property {string} id peer id
-       * @property {number} type packet type
-       * @property {Uint8Array} data packet data
-       */
-      this.events.emit("recieve", {
-        id: peer.id,
-        type: this.packet.type, 
-        data: this.packet._vdata
-      })
+    /**
+     * @event Network#recieve
+     * @type {object}
+     * @property {string} id peer id
+     * @property {number} type packet type
+     * @property {Uint8Array} data packet data
+     * @property {boolean} flip 
+     */
+    this.events.emit("recieve", {
+      id: peer.id,
+      type: this.packet.type, 
+      data: this.packet._vdata,
+      flip: Boolean(this.packet.flip),
+      guid: this.packet.guid
+    })
+    if (this.packet.flip) {
+      return;
+    }
+    this.send(this.packet.type, this.packet, peer.id, true, this.packet.guid);
   }
+
+  // ===
+  // ===
+  // ===
 
   /**
    * @returns {Network} this
@@ -173,9 +209,16 @@ class Network {
 
   /**
    * @param {string} id .
+   * @emits Network#bye
    */
   _on_disconnected(id) {
     this.count_peers -= 1;
+     /**
+     * @event Network#bye
+     * @type {object}
+     * @property {string} id peer id
+     */
+     this.events.emit("bye", { id: peerid })
   }
 
   /**

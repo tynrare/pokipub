@@ -22,22 +22,21 @@ class Chat {
     this.container = container;
     this.stats = this.container.querySelector("#chatstats");
     this.messages = this.container.querySelector("#chatmessages");
-    this.input = this.container.querySelector("#chatinput");
     this._network = network;
 
     return this;
   }
 
   run() {
-    this._network.events.on("recieve", this.recieve.bind(this));
-    this._network.events.on("greet", this.greet.bind(this));
-
-    this.input.addEventListener("change", (e) => this.send(this.input.value));
+    this._network.events.on("recieve", this.recieve, this);
+    this._network.events.on("greet", this.greet, this);
+    this._network.events.on("bye", this.update_stats, this);
   }
 
   send(message) {
     const data = str2byte(message);
     this._network.send(MESSAGE_TYPES.CHAT_MESSAGE, data);
+    this.print("." + message);
   }
 
   /**
@@ -46,13 +45,30 @@ class Chat {
    * @param {number} args.type packet type
    * @param {Uint8Array} args.data packet data
    */
-  recieve({ id, type, data }) {
+  recieve({ id, type, data, flip, guid }) {
     switch (type) {
         case MESSAGE_TYPES.CHAT_MESSAGE:
-            const str = byte2str(data);
-            console.log(str);
+            if (flip) {
+              console.log("flip:", guid );
+            } else {
+              const text = byte2str(data);
+              console.log("got message:", id, guid, text );
+              this.print("'" + text);
+            }
             break;
     }
+  }
+
+  /**
+   * @param {string} text 
+   */
+  print(text) {
+    const ci = text.indexOf("*");
+    let _text = text;
+    if (ci > -1) {
+      _text = text.slice(0, ci);
+    }
+    this.messages.innerHTML += `<b>${_text}</b>`;
   }
 
   /**
