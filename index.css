@@ -1,6 +1,6 @@
 
 .a_a {
-  color: #fff;
+  color: #102121;
 }
 
 .a_b {
@@ -167,6 +167,7 @@ bb.center, bb.centercontent > bb {
 
 .fancy .smaller {
   font-size: 0.7em;
+  font-weight: lighter;
 }
 
 
