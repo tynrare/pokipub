@@ -166,7 +166,7 @@ class Network {
         // join available
         for (const i in lobbies) {
           const l = lobbies[i];
-          if (l.playerCount < 16) {
+          if (l.playerCount < l.maxPlayers) {
             this.netlib.once("lobby", (code) => {
               console.log(`Network: connected to lobby: ${code}`);
             });
@@ -213,7 +213,7 @@ class Network {
     this.netlib.once("lobby", (code) => {
       console.log(`Network: lobby was created: ${code}`);
     });
-    this.netlib.create({ public: true });
+    this.netlib.create({ maxPlayers: 8, public: true, codeFormat: 'short' });
   }
 
   /**

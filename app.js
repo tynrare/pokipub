@@ -2,7 +2,7 @@ import PokiWrap from "./pokiwrap.js";
 import Network from "./network.js";
 import Chat from "./chat.js";
 import Avessy from "./avessy.js";
-
+import CommandLine from "./cmd.js";
 class App {
   constructor() {
     /** @type {HTMLElement} */
@@ -15,6 +15,8 @@ class App {
     this.chat = null;
     /** @type {Avessy} */
     this.avessy = null;
+    /** @type {CommandLine} */
+    this.cmd = null;
   }
   init(container) {
     this.container = container;
@@ -22,6 +24,7 @@ class App {
     this.network = new Network();
     this.chat = new Chat();
     this.avessy = new Avessy("bb#avessychat");
+    this.cmd = new CommandLine();
 
     return this;
   }
@@ -46,7 +49,13 @@ class App {
     this.chat.run();
     this.avessy.events.on("commit", ({ text }) => {
         log("Sending msg", text);
-      this.chat.send(text);
+        this.chat.send(text);
+    });
+    this.avessy.events.on("command", ({ text }) => {
+      log("Precessing command", text);
+      this.chat.print("$ > " + text, ["smaller", "faded", "gapped"]);
+      const output = this.cmd.command(text);
+      this.chat.print(output, ["smaller", "faded"]);
     });
 
     return this;

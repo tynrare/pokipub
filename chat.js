@@ -61,14 +61,18 @@ class Chat {
 
   /**
    * @param {string} text 
+   * @param {Array<string>} styles
    */
-  print(text) {
+  print(text, styles) {
     const ci = text.indexOf("*");
     let _text = text;
     if (ci > -1) {
       _text = text.slice(0, ci);
     }
     this.messages.innerHTML += `<b>${_text}</b>`;
+    if (styles) {
+      this.messages.lastChild.classList.add(...styles);
+    }
   }
 
   /**

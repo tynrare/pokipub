@@ -170,6 +170,14 @@ bb.center, bb.centercontent > bb {
   font-weight: lighter;
 }
 
+.fancy .faded {
+  opacity: 0.8;
+}
+
+.fancy .gapped {
+  margin-top: 1em;
+}
+
 
 bb.overlay {
   position: absolute;

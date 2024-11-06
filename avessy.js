@@ -4,6 +4,7 @@ const PALETTE_USE = false;
 
 var palette = null;
 var textarea = null;
+let textinput = "";
 
 /** @type {Events} */
 let events = null;
@@ -50,12 +51,24 @@ function onkeypress(keyboardEvent) {
         muteText();
       }
 
-      events.emit("commit", { text: getActiveInput().innerHTML })
+      /** @type {string} */
+      const text = textinput;
+      if (text.startsWith(".?")) {
+        events.emit("command", { text })
+      } else if (text.startsWith(".$")) {
+        events.emit("command", { text })
+      } else {
+        events.emit("commit", { text })
+      }
       insertNewLine();
       randomizePallete();
       break;
     case "Backspace":
-      removeLetter();
+      if (keyboardEvent.ctrlKey) {
+        resetInput();
+      } else {
+        removeLetter();
+      }
       break;
     default:
       if (keyboardEvent.key.length == 1) {
@@ -66,8 +79,9 @@ function onkeypress(keyboardEvent) {
 }
 
 function removeLetter() {
+  textinput = textinput.slice(0, -1);
   const input = getActiveInput();
-  input.innerHTML = input.innerHTML.slice(0, -1);
+  input.innerHTML = textinput;
 }
 
 function getActiveInput() {
@@ -75,7 +89,8 @@ function getActiveInput() {
 }
 
 function insertText(text) {
-  getActiveInput().innerHTML += text;
+  textinput += text;
+  getActiveInput().innerHTML = textinput;
 }
 
 function muteText() {
@@ -84,12 +99,14 @@ function muteText() {
 
 function insertNewLine() {
   var active = getActiveInput();
-  var li = active.innerHTML.lastIndexOf(":");
+  var li = textinput.lastIndexOf(":");
   if (li > -1) {
-    active.innerHTML = active.innerHTML.slice(0, li + 1);
+    textinput = textinput.slice(0, li + 1);
   } else {
-    active.innerHTML = "";
+    textinput = "";
   }
+
+  active.innerHTML = textinput;
 }
 
 function _insertNewLine() {
