@@ -178,6 +178,10 @@ bb.center, bb.centercontent > bb {
   margin-top: 1em;
 }
 
+.pad1 > * {
+  margin: 8px;
+}
+
 
 bb.overlay {
   position: absolute;
