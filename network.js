@@ -100,12 +100,15 @@ class Network {
 
     const buffer = this.packet.buffer.slice();
 
-    console.log("send");
+
+    const logmsg = flip ? "" : `send #${this.packet.guid}...]: ${this.packet.len} bytes.`;
+    console.log("[stash]// network.js]:", logmsg);
     if (to) {
       this.netlib.send("reliable", to, buffer);
     } else {
       this.netlib.broadcast("reliable", buffer);
     }
+    console.log("[stash]// network.js]:", "sent.");
   }
 
   /**
@@ -125,7 +128,10 @@ class Network {
      * @property {Uint8Array} data packet data
      * @property {boolean} flip 
      */
-    console.log("got");
+    const logmsg = this.packet.flip ? 
+		  `got flip.` : 
+		  `got #${this.packet.guid}...]: ${this.packet.len} bytes.`;
+    console.log("[stash]// network.js]:", logmsg);
     this.events.emit("recieve", {
       id: peer.id,
       packet: this.packet,
@@ -168,7 +174,7 @@ class Network {
           const l = lobbies[i];
           if (l.playerCount < l.maxPlayers) {
             this.netlib.once("lobby", (code) => {
-              console.log(`Network: connected to lobby: ${code}`);
+		    console.log("[stash]// network.js]:", `Network: connected to lobby: ${code}`);
             });
             this.netlib.join(l.code);
             return;
